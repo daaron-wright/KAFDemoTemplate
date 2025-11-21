@@ -282,7 +282,6 @@ export default function InitialPromptPage() {
   const router = useRouter();
   const { setInitialPrompt } = useInitialPrompt();
   const { user, session } = useAuth();
-  const { sendMessage } = useChat();
   const [inputValue, setInputValue] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
