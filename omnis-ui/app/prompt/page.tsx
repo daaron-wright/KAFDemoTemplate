@@ -307,7 +307,7 @@ export default function InitialPromptPage() {
 
     try {
       // Prepare the prompt (files are handled separately, no need for notes in prompt)
-      let enhancedPrompt = trimmedInput;
+      const enhancedPrompt = trimmedInput;
 
       // First store the prompt in localStorage for persistence
       setInitialPrompt(enhancedPrompt);
