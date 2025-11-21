@@ -4,10 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Plus, Home, Settings, LogOut, Upload, File, X } from "lucide-react";
-import Image from "next/image";
-import { SignOutButton } from "@/components/auth/sign-out-button";
 import { useAuth } from "@/lib/auth-provider";
-import { useChat } from "@/lib/chat-provider";
 import { useInitialPrompt } from "@/hooks/useInitialPrompt";
 import { Button } from "@/components/ui/button";
 import { ProtectedRoute } from "@/components/auth/protected-route";
@@ -23,7 +20,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
-  SidebarTrigger,
   SidebarInset,
   useSidebar,
 } from "@/components/ui/sidebar";
