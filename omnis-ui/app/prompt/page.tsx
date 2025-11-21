@@ -33,6 +33,25 @@ interface PromptSidebarContentProps {
   children: React.ReactNode;
 }
 
+const curatedPrompts = [
+  {
+    id: "msat",
+    label: "MSAT Investigate production deviation",
+    prompt:
+      "How can I use our document-intelligence workspace to analyze a production deviation? I need to monitor logs, auto-fetch batch metadata, run semantic search across deviation reports and SOPs, validate document versions, summarize historical corrective actions, and draft a compliance-ready resolution. Please ensure the workflow uses agentic orchestration, natural language search, and version-controlled sources, and updates the knowledge graph for future queries.",
+    summary:
+      "Monitor logs, auto-fetch batch metadata, validate versions, summarize corrective actions, and push updates into the knowledge graph.",
+  },
+  {
+    id: "rd",
+    label: "R&D Retrieve Experiment Results",
+    prompt:
+      "How can I use our document-intelligence workspace to gather experiment results for a new study? I need to run semantic search across protocols and experiment clusters, validate the latest versions, summarize findings, compare evidence across multiple sources, and generate a decision memo. Please ensure the workflow uses agentic orchestration, natural language search, version-controlled sources, and updates the knowledge graph for future insights.",
+    summary:
+      "Search protocols, confirm latest revisions, synthesize findings across sources, and generate a decision memo with knowledge graph updates.",
+  },
+];
+
 function PromptSidebarContent({ children }: PromptSidebarContentProps) {
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
   const { user, signOut } = useAuth();
