@@ -175,7 +175,7 @@ function PromptSidebarContent({ children }: PromptSidebarContentProps) {
         </SidebarFooter>
       </Sidebar>
       
-      <SidebarInset className="page__sidebar-main" style={{ background: 'url("/images/home_main_bg.png") center bottom / contain no-repeat'}}>
+      <SidebarInset className="page__sidebar-main prompt-sidebar-inset">
         {children}
       </SidebarInset>
 
