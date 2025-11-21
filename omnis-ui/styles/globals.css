@@ -6,8 +6,8 @@
 
 body {
   font-family: var(--kd-font-family-base, Arial, Helvetica, sans-serif);
-  background-color: var(--kd-color-background-page-default);
-  color: var(--kd-color-text-level-primary);
+  background-color: var(--background);
+  color: var(--foreground);
 }
 
 /* Markdown Styling */
