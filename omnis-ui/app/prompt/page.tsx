@@ -411,79 +411,56 @@ export default function InitialPromptPage() {
     <ProtectedRoute>
       <div className="h-screen overflow-hidden">
         <PromptSidebar>
-          {/* Main content */}
-          <div className="flex-1 flex flex-col items-center justify-center px-4">
-            <div className="w-full max-w-3xl">
-              <h1 className="text-4xl font-medium text-gray-800 text-center mb-12">
-                What would you like to know?
-              </h1>
+          <div className="prompt-page-wrapper">
+            <section className="prompt-shell" aria-label="Prompt Studio">
+              <div className="prompt-hero">
+                <span className="prompt-eyebrow">Prompt studio</span>
+                <h1 className="prompt-title">What would you like to know?</h1>
+                <p className="prompt-subtitle">
+                  Use the Shidoka design system foundation to compose governed questions, attach provenance, and route them into the orchestration workspace.
+                </p>
+              </div>
 
-              <form onSubmit={handleSubmit} className="w-full">
-                <div className="relative">
-                  <textarea
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    onKeyDown={(e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-                      if (e.key === "Enter" && !e.shiftKey) {
-                        e.preventDefault();
-                        handleSubmit(e);
-                      }
-                    }}
-                    placeholder="Ask me anything"
-                    className="w-full p-6 pr-20 pb-16 text-gray-700 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-gray-800 resize-none overflow-hidden"
-                    aria-label="Enter your question"
-                    disabled={isSubmitting}
-                    autoFocus
-                    rows={1}
-                    style={{ paddingBottom: '1.5rem', paddingRight: "6rem", overflow: 'scroll', minHeight: "8rem", height: "auto" }}
-                    onInput={(e) => {
-                      const target = e.target as HTMLTextAreaElement;
-                      target.style.height = "auto";
-                      target.style.height = `${target.scrollHeight}px`;
-                    }}
-                  />
-
-                  <div className="absolute right-3 bottom-3 flex items-center gap-2">
-                    <button
-                      type="button"
-                      className="w-10 h-10 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors"
-                      aria-label="Use microphone"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+              <form onSubmit={handleSubmit} className="prompt-form">
+                <div className="prompt-form__group">
+                  <label htmlFor="prompt-textarea" className="prompt-label">
+                    Compose a question
+                  </label>
+                  <div className={`prompt-textarea-wrapper ${isSubmitting ? "is-disabled" : ""}`}>
+                    <textarea
+                      id="prompt-textarea"
+                      value={inputValue}
+                      onChange={(e) => setInputValue(e.target.value)}
+                      onKeyDown={(e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+                        if (e.key === "Enter" && !e.shiftKey) {
+                          e.preventDefault();
+                          handleSubmit(e);
+                        }
+                      }}
+                      placeholder="Ask me anything"
+                      className="prompt-textarea"
+                      aria-label="Enter your question"
+                      disabled={isSubmitting}
+                      autoFocus
+                      rows={1}
+                      style={{ height: "auto" }}
+                      onInput={(e) => {
+                        const target = e.target as HTMLTextAreaElement;
+                        target.style.height = "auto";
+                        target.style.height = `${target.scrollHeight}px`;
+                      }}
+                    />
+                    <div className="prompt-textarea-actions">
+                      <button
+                        type="button"
+                        className="kd-icon-button"
+                        aria-label="Use microphone"
+                        disabled={isSubmitting}
                       >
-                        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
-                        <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-                        <line x1="12" x2="12" y1="19" y2="22" />
-                        <line x1="8" x2="16" y1="22" y2="22" />
-                      </svg>
-                    </button>
-
-                    <button
-                      type="submit"
-                      disabled={!inputValue.trim() || isSubmitting}
-                      className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
-                        !inputValue.trim() || isSubmitting
-                          ? "bg-gray-300 text-gray-500"
-                          : "bg-gray-800 text-white hover:bg-gray-900"
-                      }`}
-                      aria-label="Submit question"
-                    >
-                      {isSubmitting ? (
-                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      ) : (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          width="18"
-                          height="18"
+                          width="20"
+                          height="20"
                           viewBox="0 0 24 24"
                           fill="none"
                           stroke="currentColor"
@@ -491,126 +468,124 @@ export default function InitialPromptPage() {
                           strokeLinecap="round"
                           strokeLinejoin="round"
                         >
-                          <path d="m22 2-7 20-4-9-9-4Z" />
-                          <path d="M22 2 11 13" />
+                          <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+                          <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                          <line x1="12" x2="12" y1="19" y2="22" />
+                          <line x1="8" x2="16" y1="22" y2="22" />
                         </svg>
-                      )}
-                    </button>
+                      </button>
+
+                      <button
+                        type="submit"
+                        disabled={!inputValue.trim() || isSubmitting}
+                        className="kd-icon-button kd-icon-button--primary"
+                        aria-label="Submit question"
+                      >
+                        {isSubmitting ? (
+                          <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        ) : (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="18"
+                            height="18"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <path d="m22 2-7 20-4-9-9-4Z" />
+                            <path d="M22 2 11 13" />
+                          </svg>
+                        )}
+                      </button>
+                    </div>
                   </div>
                 </div>
               </form>
 
-              {/* Document Upload Section */}
-              {/* <div className="mt-8">
-                <div className="text-center mb-4">
-                  <h3 className="text-lg font-medium text-gray-700 mb-2">Upload Documents</h3>
-                  <p className="text-sm text-gray-500">Support for PDF, Word, Excel, PowerPoint, and text files (max 10MB each)</p>
-                </div> */}
-
-                {/* Drag and Drop Area */}
-                {/* <div
-                  onDrop={handleFileDrop}
-                  onDragOver={handleDragOver}
-                  onDragLeave={handleDragLeave}
-                  className={`relative border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
-                    isDragOver
-                      ? 'border-blue-400 bg-blue-50'
-                      : 'border-gray-300 hover:border-gray-400'
-                  }`}
-                >
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    multiple
-                    accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv"
-                    onChange={handleFileSelect}
-                    className="hidden"
-                  />
-                  
-                  <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-600 mb-2">
-                    Drag and drop your documents here, or{' '}
-                    <button
-                      type="button"
-                      onClick={() => fileInputRef.current?.click()}
-                      className="text-blue-600 hover:text-blue-700 underline"
-                    >
-                      browse files
-                    </button>
+              <div
+                className={`prompt-dropzone ${isDragOver ? "is-active" : ""}`}
+                onDrop={handleFileDrop}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+              >
+                <div className="prompt-dropzone__icon">
+                  <Upload className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="prompt-label">Attach supporting evidence</p>
+                  <p className="prompt-helper">
+                    PDF, Word, Excel, PowerPoint, text, or CSV files under 10 MB feed the orchestrator with provenance.
                   </p>
-                  <p className="text-xs text-gray-500">
-                    Supported formats: PDF, Word (.doc, .docx), Excel (.xls, .xlsx), PowerPoint (.ppt, .pptx), Text (.txt, .csv)
-                  </p>
-                </div> */}
-
-                {/* Uploaded Files List */}
-                {/* {uploadedFiles.length > 0 && (
-                  <div className="mt-4">
-                    <h4 className="text-sm font-medium text-gray-700 mb-2">Uploaded Files ({uploadedFiles.length})</h4>
-                    <div className="space-y-2">
-                      {uploadedFiles.map((file, index) => (
-                        <div
-                          key={index}
-                          className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border"
-                        >
-                          <div className="flex items-center space-x-3">
-                            <span className="text-lg">{getFileIcon(file)}</span>
-                            <div>
-                              <p className="text-sm font-medium text-gray-900 truncate max-w-xs">
-                                {file.name}
-                              </p>
-                              <p className="text-xs text-gray-500">
-                                {formatFileSize(file.size)}
-                              </p>
-                            </div>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => removeFile(index)}
-                            className="text-red-500 hover:text-red-700 p-1"
-                            aria-label={`Remove ${file.name}`}
-                          >
-                            <X className="w-4 h-4" />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div> */}
-
-              {/* Sample prompts */}
-              <div className="mt-12 grid grid-cols-2 md:grid-cols-2 gap-4">
-                <button
-                  onClick={() =>
-                    setInputValue(
-                      "How can I use our document-intelligence workspace to analyze a production deviation? I need to monitor logs, auto-fetch batch metadata, run semantic search across deviation reports and SOPs, validate document versions, summarize historical corrective actions, and draft a compliance-ready resolution. Please ensure the workflow uses agentic orchestration, natural language search, and version-controlled sources, and updates the knowledge graph for future queries."
-                    )
-                  }
-                  className="p-4 text-left bg-white border border-gray-200 rounded-lg hover:border-gray-800 transition-colors"
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="kd-button kd-button--ghost"
+                  onClick={() => fileInputRef.current?.click()}
                   disabled={isSubmitting}
                 >
-                  <div className="text-sm text-gray-600 mb-2">MSAT Investigate production deviation</div>
-                  <div className="text-gray-800">
-                    How can I use our document-intelligence workspace to analyze a production deviation? I need to monitor logs, auto-fetch batch metadata, run semantic search across deviation reports and SOPs, validate document versions, summarize historical corrective actions, and draft a compliance-ready resolution. Please ensure the workflow uses agentic orchestration, natural language search, and version-controlled sources, and updates the knowledge graph for future queries.
-                  </div>
-                </button>
-                   <button
-                  onClick={() =>
-                    setInputValue(
-                      "How can I use our document-intelligence workspace to gather experiment results for a new study? I need to run semantic search across protocols and experiment clusters, validate the latest versions, summarize findings, compare evidence across multiple sources, and generate a decision memo. Please ensure the workflow uses agentic orchestration, natural language search, version-controlled sources, and updates the knowledge graph for future insights."
-                    )
-                  }
-                  className="p-4 text-left bg-white border border-gray-200 rounded-lg hover:border-gray-800 transition-colors"
-                  disabled={isSubmitting}
-                >
-                  <div className="text-sm text-gray-600 mb-2">R&D Retrieve Experiment Results</div>
-                  <div className="text-gray-800">
-                    How can I use our document-intelligence workspace to gather experiment results for a new study? I need to run semantic search across protocols and experiment clusters, validate the latest versions, summarize findings, compare evidence across multiple sources, and generate a decision memo. Please ensure the workflow uses agentic orchestration, natural language search, version-controlled sources, and updates the knowledge graph for future insights.
-                  </div>
-                </button>
+                  Browse files
+                </Button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  multiple
+                  accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv"
+                  onChange={handleFileSelect}
+                  className="sr-only"
+                />
               </div>
-            </div>
+
+              {uploadedFiles.length > 0 && (
+                <ul className="prompt-file-list">
+                  {uploadedFiles.map((file, index) => (
+                    <li key={`${file.name}-${index}`} className="prompt-file">
+                      <div className="prompt-file__meta">
+                        <File className="h-5 w-5" />
+                        <div>
+                          <span>{file.name}</span>
+                          <small>{formatFileSize(file.size)}</small>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => removeFile(index)}
+                        className="kd-icon-button"
+                        aria-label={`Remove ${file.name}`}
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              <section className="prompt-samples" aria-label="Curated starter prompts">
+                <div className="prompt-samples__header">
+                  <span className="prompt-eyebrow">Guided starters</span>
+                  <p className="prompt-helper">
+                    Each card reflects an agentic workflow grounded in Shidoka spacing, elevation, and color tokens.
+                  </p>
+                </div>
+                <div className="prompt-card-grid">
+                  {curatedPrompts.map((sample) => (
+                    <button
+                      key={sample.id}
+                      type="button"
+                      className="prompt-card"
+                      onClick={() => setInputValue(sample.prompt)}
+                      disabled={isSubmitting}
+                    >
+                      <span className="prompt-card__eyebrow">{sample.label}</span>
+                      <p>{sample.summary}</p>
+                    </button>
+                  ))}
+                </div>
+              </section>
+            </section>
           </div>
         </PromptSidebar>
       </div>
