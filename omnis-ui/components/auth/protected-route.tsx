@@ -1,5 +1,7 @@
 "use client";
 
+'use client';
+
 import { ReactNode, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-provider";
