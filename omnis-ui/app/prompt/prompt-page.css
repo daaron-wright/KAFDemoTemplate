@@ -68,6 +68,12 @@
   color: var(--kd-color-text-level-secondary);
 }
 
+.prompt-helper {
+  font-size: 0.85rem;
+  color: var(--kd-color-text-level-secondary);
+  max-width: 60ch;
+}
+
 .prompt-textarea-wrapper {
   border-radius: var(--kd-radius-lg);
   background-color: var(--kd-color-background-container-default);
