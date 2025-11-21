@@ -27,6 +27,7 @@ import {
   SidebarInset,
   useSidebar,
 } from "@/components/ui/sidebar";
+import "./prompt-page.css";
 
 interface PromptSidebarContentProps {
   children: React.ReactNode;
