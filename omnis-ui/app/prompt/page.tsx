@@ -390,15 +390,6 @@ export default function InitialPromptPage() {
     setUploadedFiles(prev => prev.filter((_, i) => i !== index));
   };
 
-  const getFileIcon = (file: File) => {
-    if (file.type.includes('pdf')) return '📄';
-    if (file.type.includes('word')) return '📝';
-    if (file.type.includes('sheet') || file.type.includes('excel')) return '📊';
-    if (file.type.includes('presentation') || file.type.includes('powerpoint')) return '📈';
-    if (file.type.includes('text')) return '📋';
-    return '📎';
-  };
-
   const formatFileSize = (bytes: number) => {
     if (bytes === 0) return '0 Bytes';
     const k = 1024;
