@@ -471,7 +471,8 @@ export default function InitialPromptPage() {
                   {templateFeatures.map((feature) => (
                     <div
                       key={feature.id}
-                      className="prompt-card cursor-default"
+                      className={`prompt-card ${feature.id === 'agents' ? 'cursor-pointer hover:bg-gray-50 transition-colors' : 'cursor-default'}`}
+                      onClick={() => handleFeatureClick(feature.id)}
                     >
                       <div className="flex items-center gap-2 mb-2">
                         {feature.icon}
@@ -488,6 +489,36 @@ export default function InitialPromptPage() {
             </section>
           </div>
         </PromptSidebar>
+
+        <Dialog open={isAgentsDialogOpen} onOpenChange={setIsAgentsDialogOpen}>
+          <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Available Agents</DialogTitle>
+              <DialogDescription>
+                These are the agents currently available in the Kyndryl Agentic Framework.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+              {agents.map((agent) => (
+                <div key={agent.id} className="p-4 border rounded-lg bg-card text-card-foreground shadow-sm hover:shadow-md transition-shadow">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="font-semibold text-lg text-amber-900">{agent.name}</h3>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-3">{agent.description}</p>
+                  {agent.capabilities && (
+                    <div className="flex flex-wrap gap-1.5">
+                      {agent.capabilities.map((cap: string) => (
+                        <span key={cap} className="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-medium">
+                          {cap}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </ProtectedRoute>
   );
