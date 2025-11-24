@@ -78,28 +78,92 @@ function ChatSidebarContent({ children }: ChatSidebarContentProps) {
     if (state === "collapsed") {
       const target = e.target as HTMLElement;
       // Don't expand if clicking on buttons or links
-      if (!target.closest('button') && !target.closest('a')) {
+      if (!target.closest('button') && !target.closest('a') && !target.closest('.logo-upload-area')) {
         toggleSidebar();
       }
     }
   };
 
+  const handleLogoDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setCustomLogo(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleLogoDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleLogoClick = () => {
+    logoInputRef.current?.click();
+  };
+
+  const handleLogoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setCustomLogo(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <>
-      <Sidebar 
-        variant="sidebar" 
-        collapsible="icon" 
+      <Sidebar
+        variant="sidebar"
+        collapsible="icon"
         className="border-r"
         onClick={handleSidebarClick}
       >
         <SidebarHeader className="flex items-center justify-center border-b bg-white">
           {/* Kyndryl + L&G Concatenated Logos */}
-          <div className="flex items-center justify-center py-2">
-            <ConcatenatedLogo
-              width={state === "expanded" ? 200 : 60}
-              height={state === "expanded" ? undefined : 20}
-              className="chat-sidebar__concatenated-logo transition-all duration-300"
+          <div
+            className="flex items-center justify-center py-2 logo-upload-area cursor-pointer relative group"
+            onDrop={handleLogoDrop}
+            onDragOver={handleLogoDragOver}
+            onClick={handleLogoClick}
+            title="Click or drag image to upload custom logo"
+          >
+            <input
+              type="file"
+              ref={logoInputRef}
+              className="hidden"
+              accept="image/*"
+              onChange={handleLogoSelect}
             />
+            <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-md pointer-events-none">
+              <span className="text-xs text-gray-600 font-medium bg-white/80 px-2 py-1 rounded">Change Logo</span>
+            </div>
+            {customLogo ? (
+              <ConcatenatedLogo
+                width={state === "expanded" ? 200 : 60}
+                height={state === "expanded" ? undefined : 20}
+                className="chat-sidebar__concatenated-logo transition-all duration-300"
+                customSrc={customLogo}
+              />
+            ) : (
+              <div
+                className="flex items-center justify-center border-2 border-dashed border-gray-200 rounded-md text-gray-400 hover:border-gray-300 hover:text-gray-500 transition-colors"
+                style={{
+                  width: state === "expanded" ? 200 : 60,
+                  height: state === "expanded" ? 80 : 40
+                }}
+              >
+                <span className={`text-xs font-medium ${state === "collapsed" ? "hidden" : ""}`}>Upload Logo</span>
+                {state === "collapsed" && <Upload className="h-4 w-4" />}
+              </div>
+            )}
           </div>
         </SidebarHeader>
 
