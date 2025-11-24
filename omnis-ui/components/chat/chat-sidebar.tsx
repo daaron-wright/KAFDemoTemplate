@@ -49,6 +49,8 @@ function ChatSidebarContent({ children }: ChatSidebarContentProps) {
   const [isM2MPopupOpen, setIsM2MPopupOpen] = useState(false);
   const [isM2MLoading, setIsM2MLoading] = useState(true);
   const [showVideoPopup, setShowVideoPopup] = useState(false);
+  const [customLogo, setCustomLogo] = useState<string | null>(null);
+  const logoInputRef = useRef<HTMLInputElement>(null);
 
   const toggleM2MPopup = () => {
     setIsM2MPopupOpen((prev) => {
