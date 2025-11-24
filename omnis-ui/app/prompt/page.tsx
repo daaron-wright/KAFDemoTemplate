@@ -141,12 +141,25 @@ function PromptSidebarContent({ children, onNewPrompt }: PromptSidebarContentPro
             <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-md pointer-events-none">
               <span className="text-xs text-gray-600 font-medium bg-white/80 px-2 py-1 rounded">Change Logo</span>
             </div>
-            <ConcatenatedLogo
-              width={state === "expanded" ? 200 : 60}
-              height={state === "expanded" ? undefined : 20}
-              className="page-sidebar__concatenated-logo transition-all duration-300"
-              customSrc={customLogo || undefined}
-            />
+            {customLogo ? (
+              <ConcatenatedLogo
+                width={state === "expanded" ? 200 : 60}
+                height={state === "expanded" ? undefined : 20}
+                className="page-sidebar__concatenated-logo transition-all duration-300"
+                customSrc={customLogo}
+              />
+            ) : (
+              <div
+                className="flex items-center justify-center border-2 border-dashed border-gray-200 rounded-md text-gray-400 hover:border-gray-300 hover:text-gray-500 transition-colors"
+                style={{
+                  width: state === "expanded" ? 200 : 60,
+                  height: state === "expanded" ? 80 : 40
+                }}
+              >
+                <span className={`text-xs font-medium ${state === "collapsed" ? "hidden" : ""}`}>Upload Logo</span>
+                {state === "collapsed" && <Upload className="h-4 w-4" />}
+              </div>
+            )}
           </div>
         </SidebarHeader>
 
