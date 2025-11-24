@@ -31,7 +31,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ className }) => {
         {messages.length === 0 && (
           <div className="flex h-full items-center justify-center">
             <p className="text-muted-foreground">
-              Start a conversation with Omnis AI
+              Start a conversation with Kyndryl Agentic Framework
             </p>
           </div>
         )}

@@ -6,11 +6,31 @@ interface ConcatenatedLogoProps {
   width?: number;
   height?: number;
   className?: string;
+  customSrc?: string;
 }
 
-export function ConcatenatedLogo({ width = 400, height = 80, className = "", flexDirection = 'column' }: ConcatenatedLogoProps) {
+export function ConcatenatedLogo({ width = 400, height = 80, className = "", flexDirection = 'column', customSrc }: ConcatenatedLogoProps) {
+  if (customSrc) {
+    return (
+      <div
+        className={`${className} concatenated-logo__wrapper flex items-center justify-center`}
+        style={{ width: width, height: height }}
+      >
+        <Image
+          src={customSrc}
+          alt="Custom Logo"
+          width={width}
+          height={height}
+          className="object-contain max-h-full max-w-full"
+          priority
+          style={{ width: 'auto', height: 'auto', maxWidth: '100%', maxHeight: '100%' }}
+        />
+      </div>
+    );
+  }
+
   return (
-    <div 
+    <div
       className={`${className} concatenated-logo__wrapper flex items-center gap-4`}
       style={{ width: width, height: height, flexDirection: flexDirection }}
     >

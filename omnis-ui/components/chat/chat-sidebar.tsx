@@ -1,8 +1,8 @@
 "use client";
 
-import { Home, Plus, Settings, LogOut, Expand } from "lucide-react";
+import { Home, Plus, Expand, Upload } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import {
@@ -29,7 +29,6 @@ import {
   SidebarInset,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { useAuth } from "@/lib/auth-provider";
 
 // Dynamically import the 3D component to avoid SSR issues
 const ThreeDimensionalDAG = dynamic(() => import("@/components/3dm2m/mock-3d-dag"), {
@@ -50,8 +49,8 @@ function ChatSidebarContent({ children }: ChatSidebarContentProps) {
   const [isM2MPopupOpen, setIsM2MPopupOpen] = useState(false);
   const [isM2MLoading, setIsM2MLoading] = useState(true);
   const [showVideoPopup, setShowVideoPopup] = useState(false);
-  const [isUserModalOpen, setIsUserModalOpen] = useState(false);
-  const { user, signOut } = useAuth();
+  const [customLogo, setCustomLogo] = useState<string | null>(null);
+  const logoInputRef = useRef<HTMLInputElement>(null);
 
   const toggleM2MPopup = () => {
     setIsM2MPopupOpen((prev) => {
@@ -72,16 +71,6 @@ function ChatSidebarContent({ children }: ChatSidebarContentProps) {
     });
   };
 
-  const handleLogout = async () => {
-    try {
-      console.log("Logging out user");
-      await signOut();
-      setIsUserModalOpen(false);
-    } catch (error) {
-      console.error("Error during logout:", error);
-    }
-  };
-
   const { state, toggleSidebar } = useSidebar();
 
   const handleSidebarClick = (e: React.MouseEvent) => {
@@ -89,28 +78,92 @@ function ChatSidebarContent({ children }: ChatSidebarContentProps) {
     if (state === "collapsed") {
       const target = e.target as HTMLElement;
       // Don't expand if clicking on buttons or links
-      if (!target.closest('button') && !target.closest('a')) {
+      if (!target.closest('button') && !target.closest('a') && !target.closest('.logo-upload-area')) {
         toggleSidebar();
       }
     }
   };
 
+  const handleLogoDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setCustomLogo(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleLogoDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleLogoClick = () => {
+    logoInputRef.current?.click();
+  };
+
+  const handleLogoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setCustomLogo(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <>
-      <Sidebar 
-        variant="sidebar" 
-        collapsible="icon" 
+      <Sidebar
+        variant="sidebar"
+        collapsible="icon"
         className="border-r"
         onClick={handleSidebarClick}
       >
         <SidebarHeader className="flex items-center justify-center border-b bg-white">
           {/* Kyndryl + L&G Concatenated Logos */}
-          <div className="flex items-center justify-center py-2">
-            <ConcatenatedLogo
-              width={state === "expanded" ? 200 : 60}
-              height={state === "expanded" ? undefined : 20}
-              className="chat-sidebar__concatenated-logo transition-all duration-300"
+          <div
+            className="flex items-center justify-center py-2 logo-upload-area cursor-pointer relative group"
+            onDrop={handleLogoDrop}
+            onDragOver={handleLogoDragOver}
+            onClick={handleLogoClick}
+            title="Click or drag image to upload custom logo"
+          >
+            <input
+              type="file"
+              ref={logoInputRef}
+              className="hidden"
+              accept="image/*"
+              onChange={handleLogoSelect}
             />
+            <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-md pointer-events-none">
+              <span className="text-xs text-gray-600 font-medium bg-white/80 px-2 py-1 rounded">Change Logo</span>
+            </div>
+            {customLogo ? (
+              <ConcatenatedLogo
+                width={state === "expanded" ? 200 : 60}
+                height={state === "expanded" ? undefined : 20}
+                className="chat-sidebar__concatenated-logo transition-all duration-300"
+                customSrc={customLogo}
+              />
+            ) : (
+              <div
+                className="flex items-center justify-center border-2 border-dashed border-gray-200 rounded-md text-gray-400 hover:border-gray-300 hover:text-gray-500 transition-colors"
+                style={{
+                  width: state === "expanded" ? 200 : 60,
+                  height: state === "expanded" ? 80 : 40
+                }}
+              >
+                <span className={`text-xs font-medium ${state === "collapsed" ? "hidden" : ""}`}>Upload Logo</span>
+                {state === "collapsed" && <Upload className="h-4 w-4" />}
+              </div>
+            )}
           </div>
         </SidebarHeader>
 
@@ -175,29 +228,6 @@ function ChatSidebarContent({ children }: ChatSidebarContentProps) {
                 </button>
               </SidebarMenuButton>
             </SidebarMenuItem>
-
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild size="lg" className={`h-12 ${state === "collapsed" ? "justify-center px-0" : ""}`}>
-                <Link href="/settings">
-                  <Settings className="h-5 w-5" />
-                  <span className={`font-medium ${state === "collapsed" ? "sr-only" : ""}`}>Settings</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild size="lg" className={`h-12 ${state === "collapsed" ? "justify-center px-0" : ""}`}>
-                <button
-                  onClick={() => {
-                    console.log("User logout button clicked, opening modal");
-                    setIsUserModalOpen(true);
-                  }}
-                >
-                  <LogOut className="h-5 w-5" />
-                  <span className={`font-medium ${state === "collapsed" ? "sr-only" : ""}`}>Account</span>
-                </button>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
           </SidebarMenu>
         </SidebarFooter>
       </Sidebar>
@@ -205,98 +235,6 @@ function ChatSidebarContent({ children }: ChatSidebarContentProps) {
       <SidebarInset>
         {children}
       </SidebarInset>
-
-      {/* User Account Modal */}
-      {isUserModalOpen && (
-        <div className="fixed inset-0 z-[99999] flex items-center justify-center">
-          {/* Backdrop */}
-          <div
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-            onClick={() => setIsUserModalOpen(false)}
-          />
-
-          {/* Modal Content */}
-          <div className="relative bg-white rounded-lg shadow-2xl p-6 w-96 max-w-[90vw] mx-4">
-            {/* Close button */}
-            <button
-              onClick={() => setIsUserModalOpen(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
-            >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-
-            {/* Header */}
-            <div className="text-center mb-6">
-              <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="32"
-                  height="32"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-amber-700"
-                >
-                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-                  <circle cx="12" cy="7" r="4" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900">Account</h3>
-              <p className="text-sm text-gray-600 mt-1">
-                {user?.email || "User"}
-              </p>
-              <p className="text-xs text-gray-500 mt-1">Signed in</p>
-            </div>
-
-            {/* Actions */}
-            <div className="space-y-3">
-              <button
-                onClick={handleLogout}
-                className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                  <polyline points="16,17 21,12 16,7" />
-                  <line x1="21" x2="9" y1="12" y2="12" />
-                </svg>
-                Sign out
-              </button>
-
-              <button
-                onClick={() => setIsUserModalOpen(false)}
-                className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-4 rounded-lg transition-colors"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* 3D DAG Dialog */}
       <Dialog

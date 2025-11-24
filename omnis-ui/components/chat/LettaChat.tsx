@@ -179,7 +179,7 @@ const LettaChat: React.FC<LettaChatProps> = ({ className }) => {
                     <div className="mt-4 bg-gray-200 border border-gold/30 rounded-lg overflow-hidden">
                       <div className="bg-gray-100 p-2 flex justify-between items-center border-b border-gold/30">
                         <h3 className="text-sm font-medium text-gray-700">
-                          Omnis is building your dashboard
+                          Kyndryl Agentic Framework is building your dashboard
                         </h3>
                       </div>
                       <div className="h-[450px] flex items-center justify-center">

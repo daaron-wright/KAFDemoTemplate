@@ -113,7 +113,7 @@ export const LettaChatProvider = ({ children }: { children: ReactNode }) => {
     if (lowerMessage.includes("esg") || lowerMessage.includes("scope") || lowerMessage.includes("carbon") || 
         lowerMessage.includes("investment") || lowerMessage.includes("portfolio") || lowerMessage.includes("analysis") ||
         lowerMessage.includes("excel") || lowerMessage.includes("spreadsheet") || lowerMessage.includes("upload")) {
-      return `**OMNIS is reasoning….**
+      return `**Kyndryl Agentic Framework is reasoning….**
 
 Please help me calculate my (Scope 3 Category 15) financed emissions for the new set of investments I am considering. The portfolio consists of bonds, infrastructure (project finance) and real estate equity which I have uploaded via the Excel spreadsheet. I need to calculate these financed emissions in line with PCAF standard as well as our L&G internal guidance. Finally, I need to understand how these 'green' investments are compared to internal and external benchmarks.
 
@@ -134,9 +134,9 @@ Existing L&G Portfolio will be taken from L&G 2024 Sustainability Report unless 
 
 **Analysis Execution**
 
-**OMNIS is performing the analysis….**
+**Kyndryl Agentic Framework is performing the analysis….**
 
-**OMNIS has completed the analysis**`;
+**Kyndryl Agentic Framework has completed the analysis**`;
     }
     
     // Natural disaster prompts
@@ -146,7 +146,7 @@ Existing L&G Portfolio will be taken from L&G 2024 Sustainability Report unless 
     
     // Default responses - prioritize ESG analysis
     const defaultResponses = [
-      `**OMNIS is reasoning….**
+      `**Kyndryl Agentic Framework is reasoning….**
 
 Please help me calculate my (Scope 3 Category 15) financed emissions for the new set of investments I am considering. The portfolio consists of bonds, infrastructure (project finance) and real estate equity which I have uploaded via the Excel spreadsheet. I need to calculate these financed emissions in line with PCAF standard as well as our L&G internal guidance. Finally, I need to understand how these 'green' investments are compared to internal and external benchmarks.
 
@@ -167,9 +167,9 @@ Existing L&G Portfolio will be taken from L&G 2024 Sustainability Report unless 
 
 **Analysis Execution**
 
-**OMNIS is performing the analysis….**
+**Kyndryl Agentic Framework is performing the analysis….**
 
-**OMNIS has completed the analysis**`,
+**Kyndryl Agentic Framework has completed the analysis**`,
       "Thank you for your message. I'm a demo assistant helping you explore the Omnis platform capabilities.",
       "Based on your query, I can provide relevant data analysis and actionable insights. The platform integrates multiple data sources for comprehensive reporting.",
       "Your message has been processed. The Omnis platform offers advanced analytics and visualization capabilities for decision-making support.",

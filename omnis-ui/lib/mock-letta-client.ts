@@ -15,10 +15,46 @@ export class MockLettaError extends Error {
 // Mock agent data
 const MOCK_AGENTS = [
   {
-    id: "mock-agent-id",
+    id: "agent-demo",
     name: "Demo Assistant",
-    description: "A mock agent for demonstration purposes",
+    description: "A general-purpose assistant for demonstration purposes.",
     created_at: new Date().toISOString(),
+    capabilities: ["General Inquiry", "Platform Navigation"]
+  },
+  {
+    id: "agent-health",
+    name: "Health & Safety Agent",
+    description: "Specialized in health data analysis, outbreak patterns, and autonomous vehicle safety metrics.",
+    created_at: new Date().toISOString(),
+    capabilities: ["Health Metrics", "Safety Analysis", "Autonomous Systems"]
+  },
+  {
+    id: "agent-border",
+    name: "Border Security Agent",
+    description: "Monitors border crossings, security alerts, and compliance metrics.",
+    created_at: new Date().toISOString(),
+    capabilities: ["Security Monitoring", "Compliance", "Risk Assessment"]
+  },
+  {
+    id: "agent-esg",
+    name: "ESG Analyst",
+    description: "Expert in Environmental, Social, and Governance investment analysis and carbon footprint calculation.",
+    created_at: new Date().toISOString(),
+    capabilities: ["Carbon Footprint", "Investment Analysis", "PCAF Standards"]
+  },
+  {
+    id: "agent-crisis",
+    name: "Crisis Response Agent",
+    description: "Handles natural disaster data, emergency response planning, and resource allocation.",
+    created_at: new Date().toISOString(),
+    capabilities: ["Emergency Response", "Disaster Management", "Resource Allocation"]
+  },
+  {
+    id: "agent-octapharma",
+    name: "OctaPharma Specialist",
+    description: "Specialized in pharmaceutical manufacturing, deviation management, and R&D processes.",
+    created_at: new Date().toISOString(),
+    capabilities: ["Pharma Manufacturing", "Quality Control", "R&D Analysis"]
   }
 ];
 
@@ -97,7 +133,7 @@ function generateMockResponse(userMessage: string): string {
   if (lowerMessage.includes("esg") || lowerMessage.includes("scope") || lowerMessage.includes("carbon") || 
       lowerMessage.includes("investment") || lowerMessage.includes("portfolio") || lowerMessage.includes("analysis") ||
       lowerMessage.includes("excel") || lowerMessage.includes("spreadsheet") || lowerMessage.includes("upload")) {
-    return `**OMNIS is reasoning….**
+    return `**Kyndryl Agentic Framework is reasoning….**
 
 Please help me calculate my (Scope 3 Category 15) financed emissions for the new set of investments I am considering. The portfolio consists of bonds, infrastructure (project finance) and real estate equity which I have uploaded via the Excel spreadsheet. I need to calculate these financed emissions in line with PCAF standard as well as our L&G internal guidance. Finally, I need to understand how these 'green' investments are compared to internal and external benchmarks.
 
@@ -118,9 +154,9 @@ Existing L&G Portfolio will be taken from L&G 2024 Sustainability Report unless 
 
 **Analysis Execution**
 
-**OMNIS is performing the analysis….**
+**Kyndryl Agentic Framework is performing the analysis….**
 
-**OMNIS has completed the analysis**`;
+**Kyndryl Agentic Framework has completed the analysis**`;
   }
   
   // Natural disaster prompts
@@ -130,34 +166,39 @@ Existing L&G Portfolio will be taken from L&G 2024 Sustainability Report unless 
   
   // Default responses - prioritize ESG analysis
   const defaultResponses = [
-    `**OMNIS is reasoning….**
+    `**Kyndryl Agentic Framework is reasoning….**
 
-Please help me calculate my (Scope 3 Category 15) financed emissions for the new set of investments I am considering. The portfolio consists of bonds, infrastructure (project finance) and real estate equity which I have uploaded via the Excel spreadsheet. I need to calculate these financed emissions in line with PCAF standard as well as our L&G internal guidance. Finally, I need to understand how these 'green' investments are compared to internal and external benchmarks.
+I have received your request: "${userMessage}".
 
-I will read the Excel file you have uploaded and then dynamically create the required workflow to perform this task. At a high level I will perform the work using a number of agents logically grouped into distinctive categories (which can be inspected in the Directed Acyclic Graph (DAG) tab).
- 
-• Data acquisition agents will fetch internal and external data
-• Data validation, quality, imputation and review agents will validate and assess the data quality, fetch the (internal and external) datasets to address the identified data quality issues (e.g. anomalies, gaps etc), and use agentic worker agents to independently assure the work performance
-• Emission calculation agents will convert the activity data into financed emissions per the PCAF method
-• Evidence collation and report production agents will produce the final output
+As a boilerplate template, I am configured to demonstrate the agentic workflow structure. To implement specific logic for this prompt, you would:
 
-The full workflow breakdown can be inspected in the Directed Acyclic Graph (DAG) tab
+1.  **Define Intent**: Update \`isHealthPrompt\` or create a new intent classifier in \`app/chat/page.tsx\`.
+2.  **Create Agents**: Define new agents in \`lib/mock-letta-client.ts\` or connect to a real Letta instance.
+3.  **Design Workflow**: Create a new DAG visualization in \`components/dag\` to represent the agent collaboration.
+4.  **Build Dashboard**: Create a custom dashboard component in \`components/dashboard\` to visualize the results.
 
-**Benchmark Comparison**
+**Current Workflow Status:**
 
-As a comparison, I will contract my Scope 3 calculations for the new investments against L&G's existing portfolio and external benchmarks.
+• **Input Received**: Validated and processed.
+• **Agent Routing**: Routed to the Demo Assistant.
+• **Execution**: Simulating analysis...
 
-Existing L&G Portfolio will be taken from L&G 2024 Sustainability Report unless otherwise stated.
+**Kyndryl Agentic Framework is performing the analysis….**
 
-**Analysis Execution**
+**Kyndryl Agentic Framework has completed the analysis**`,
+    `**Kyndryl Agentic Framework is reasoning….**
 
-**OMNIS is performing the analysis….**
+I am processing your input: "${userMessage}".
 
-**OMNIS has completed the analysis**`,
-    "Thank you for your message. I'm a demo assistant helping you explore the Omnis platform capabilities.",
-    "Based on your query, I can provide relevant data analysis and actionable insights. The platform integrates multiple data sources for comprehensive reporting.",
-    "Your message has been processed. The Omnis platform offers advanced analytics and visualization capabilities for decision-making support.",
-    "I'm analyzing your request. The system provides real-time monitoring and intelligent insights to support operational efficiency."
+This is a blank template response. To customize this behavior, review the following files:
+
+*   \`app/prompt/page.tsx\`: The entry point for user prompts.
+*   \`app/chat/page.tsx\`: The chat interface and orchestration logic.
+*   \`lib/mock-letta-client.ts\`: The mock agent definitions and responses.
+
+**Kyndryl Agentic Framework is performing the analysis….**
+
+**Kyndryl Agentic Framework has completed the analysis**`
   ];
   
   return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];

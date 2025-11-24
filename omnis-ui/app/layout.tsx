@@ -16,8 +16,8 @@ const notoKufi = Noto_Kufi_Arabic({
 });
 
 export const metadata = {
-  title: "Omnis Demo",
-  description: "Omnis UAE Health and Security Demo",
+  title: "Kyndryl Agentic Framework",
+  description: "Kyndryl Agentic Framework Demo",
 };
 
 export default function RootLayout({
