@@ -202,21 +202,7 @@ function PromptSidebarContent({ children, onNewPrompt }: PromptSidebarContentPro
             <SidebarMenuItem>
               <SidebarMenuButton asChild size="lg" className={`h-12 ${state === "collapsed" ? "justify-center px-0" : ""}`}>
                 <button onClick={toggleSidebar}>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="h-5 w-5"
-                  >
-                    <path d="M11 19l-7-7 7-7" />
-                    <path d="M21 19l-7-7 7-7" />
-                  </svg>
+                  <ShidokaIcon name="chevron-left" className="h-5 w-5" />
                   <span className={`font-medium ${state === "collapsed" ? "sr-only" : ""}`}>Collapse</span>
                 </button>
               </SidebarMenuButton>
