@@ -15,10 +15,46 @@ export class MockLettaError extends Error {
 // Mock agent data
 const MOCK_AGENTS = [
   {
-    id: "mock-agent-id",
+    id: "agent-demo",
     name: "Demo Assistant",
-    description: "A mock agent for demonstration purposes",
+    description: "A general-purpose assistant for demonstration purposes.",
     created_at: new Date().toISOString(),
+    capabilities: ["General Inquiry", "Platform Navigation"]
+  },
+  {
+    id: "agent-health",
+    name: "Health & Safety Agent",
+    description: "Specialized in health data analysis, outbreak patterns, and autonomous vehicle safety metrics.",
+    created_at: new Date().toISOString(),
+    capabilities: ["Health Metrics", "Safety Analysis", "Autonomous Systems"]
+  },
+  {
+    id: "agent-border",
+    name: "Border Security Agent",
+    description: "Monitors border crossings, security alerts, and compliance metrics.",
+    created_at: new Date().toISOString(),
+    capabilities: ["Security Monitoring", "Compliance", "Risk Assessment"]
+  },
+  {
+    id: "agent-esg",
+    name: "ESG Analyst",
+    description: "Expert in Environmental, Social, and Governance investment analysis and carbon footprint calculation.",
+    created_at: new Date().toISOString(),
+    capabilities: ["Carbon Footprint", "Investment Analysis", "PCAF Standards"]
+  },
+  {
+    id: "agent-crisis",
+    name: "Crisis Response Agent",
+    description: "Handles natural disaster data, emergency response planning, and resource allocation.",
+    created_at: new Date().toISOString(),
+    capabilities: ["Emergency Response", "Disaster Management", "Resource Allocation"]
+  },
+  {
+    id: "agent-octapharma",
+    name: "OctaPharma Specialist",
+    description: "Specialized in pharmaceutical manufacturing, deviation management, and R&D processes.",
+    created_at: new Date().toISOString(),
+    capabilities: ["Pharma Manufacturing", "Quality Control", "R&D Analysis"]
   }
 ];
 
