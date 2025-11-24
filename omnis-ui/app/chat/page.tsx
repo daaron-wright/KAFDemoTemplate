@@ -661,7 +661,7 @@ Analysis of data collected from health facilities across the country shows a 28%
                     <div className="flex items-center space-x-2 mb-3">
                       <div className="inline-block h-4 w-4 animate-pulse rounded-full" style={{ backgroundColor: "#775A0B" }} />
                       <span className="text-sm" style={{ color: "#775A0B" }}>
-                        Omnis is thinking...
+                        Kyndryl Agentic Framework is thinking...
                       </span>
                     </div>
                   ) : (
@@ -1630,7 +1630,7 @@ export function DashboardLoader() {
   return (
     <div className="mt-4 bg-gray-200 border border-blue/30 rounded-lg overflow-hidden">
       <div className="bg-gray-100 p-2 flex justify-between items-center border-b border-blue/30">
-        <h3 className="text-sm font-medium text-gray-700">Omnis is building your dashboard</h3>
+        <h3 className="text-sm font-medium text-gray-700">Kyndryl Agentic Framework is building your dashboard</h3>
       </div>
       <div className="h-[450px] flex items-center justify-center">
         <div className="w-12 h-12 border-4 border-blue/30 border-t-blue rounded-full animate-spin" />
@@ -1670,7 +1670,7 @@ function DashboardWithLoading({
   return isLoading ? (
     <div className="bg-gray-200 border border-blue/30 rounded-lg overflow-hidden z-10">
       <div className="bg-gray-100 p-2 flex justify-between items-center border-b border-blue/30">
-        <h3 className="text-sm font-medium text-gray-700">Omnis is building your dashboard</h3>
+        <h3 className="text-sm font-medium text-gray-700">Kyndryl Agentic Framework is building your dashboard</h3>
       </div>
       <div className="h-[450px] flex items-center justify-center">
         <div className="w-12 h-12 border-4 border-blue/30 border-t-blue rounded-full animate-spin" />
