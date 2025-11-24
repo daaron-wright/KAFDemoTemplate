@@ -42,151 +42,50 @@ interface AuthContextType {
 
 // Create the auth context
 const AuthContext = createContext<AuthContextType>({
-  user: null,
-  session: null,
-  isLoading: true,
+  user: { id: "1", email: "demo@omnis.com" },
+  session: { user: { id: "1", email: "demo@omnis.com" }, expiresAt: Date.now() + 1000000000 },
+  isLoading: false,
   signIn: async () => ({ error: null }),
   signUp: async () => ({ error: null }),
   signOut: async () => {},
   resetPassword: async () => ({ error: null }),
 });
 
-// Hardcoded credentials
-const VALID_CREDENTIALS = {
-  email: "pedro.clem@kyndryl.com",
-  password: "pedro.clem",
+// Default user for no-auth mode
+const DEFAULT_USER = {
+  id: "1",
+  email: "demo@omnis.com",
 };
 
 // Create the auth provider component
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(DEFAULT_USER);
+  const [session, setSession] = useState<Session | null>({
+    user: DEFAULT_USER,
+    expiresAt: Date.now() + 24 * 60 * 60 * 1000 * 365, // 1 year
+  });
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    // Check for stored session in localStorage
-    const getInitialSession = () => {
-      setIsLoading(true);
-
-      try {
-        const storedSession = localStorage.getItem("auth_session");
-        console.log(
-          "Checking for stored session:",
-          storedSession ? "Found" : "Not found"
-        );
-
-        if (storedSession) {
-          const parsedSession = JSON.parse(storedSession);
-
-          // Check if session has expired
-          if (parsedSession.expiresAt && Date.now() < parsedSession.expiresAt) {
-            console.log(
-              "Restoring valid session for user:",
-              parsedSession.user?.email
-            );
-            setSession(parsedSession);
-            setUser(parsedSession.user);
-          } else {
-            console.log("Session has expired, clearing stored session");
-            localStorage.removeItem("auth_session");
-          }
-        } else {
-          console.log("No stored session found");
-        }
-      } catch (error) {
-        console.error("Error getting initial session:", error);
-        // Clear corrupted session data
-        localStorage.removeItem("auth_session");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    // Small delay to ensure localStorage is ready
-    if (typeof window !== "undefined") {
-      setTimeout(getInitialSession, 100);
-    } else {
-      setIsLoading(false);
-    }
-  }, []);
-
-  // Sign in with email and password
+  // Sign in stub
   const signIn = async (email: string, password: string) => {
-    try {
-      // Check against hardcoded credentials
-      if (
-        email === VALID_CREDENTIALS.email &&
-        password === VALID_CREDENTIALS.password
-      ) {
-        const newUser = { id: "1", email };
-        const newSession = {
-          user: newUser,
-          expiresAt: Date.now() + 24 * 60 * 60 * 1000, // 24 hours from now
-        };
-
-        console.log("Sign in successful, storing session for:", email);
-
-        // Store session in localStorage
-        localStorage.setItem("auth_session", JSON.stringify(newSession));
-
-        // Verify it was stored
-        const stored = localStorage.getItem("auth_session");
-        console.log("Session stored successfully:", !!stored);
-
-        setUser(newUser);
-        setSession(newSession);
-        return { error: null };
-      } else {
-        console.log("Sign in failed: Invalid credentials");
-        return { error: { message: "Invalid email or password" } };
-      }
-    } catch (error) {
-      console.error("Error during sign in:", error);
-      return { error: { message: "An unexpected error occurred" } };
-    }
+    return { error: null };
   };
 
-  // Sign up with email and password
+  // Sign up stub
   const signUp = async (email: string, password: string) => {
-    try {
-      // In a real app, this would create a new user
-      // For now, we'll just pretend it worked if the email isn't already taken
-      if (email === VALID_CREDENTIALS.email) {
-        return { error: { message: "Email already in use" } };
-      }
-
-      return { error: null };
-    } catch (error) {
-      console.error("Error during sign up:", error);
-      return { error: { message: "An unexpected error occurred" } };
-    }
+    return { error: null };
   };
 
-  // Sign out
+  // Sign out stub
   const signOut = async () => {
-    try {
-      // Clear stored session
-      localStorage.removeItem("auth_session");
-
-      setUser(null);
-      setSession(null);
-      router.push("/");
-    } catch (error) {
-      console.error("Error during sign out:", error);
-    }
+    // No-op in no-auth mode
+    router.push("/");
   };
 
-  // Reset password
+  // Reset password stub
   const resetPassword = async (email: string) => {
-    try {
-      // In a real app, this would send a reset email
-      // For now, just pretend it worked
-      return { error: null };
-    } catch (error) {
-      console.error("Error during password reset:", error);
-      return { error: { message: "An unexpected error occurred" } };
-    }
+    return { error: null };
   };
 
   // The value to be provided to consuming components
