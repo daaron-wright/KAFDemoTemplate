@@ -17,7 +17,7 @@ export function VideoPopup({
 }: VideoPopupProps) {
   // Initialize position in the top right corner
   const [position, setPosition] = useState({
-    x: window.innerWidth - 350,
+    x: 0,
     y: 100,
   });
   const [isDragging, setIsDragging] = useState(false);
