@@ -97,7 +97,7 @@ function generateMockResponse(userMessage: string): string {
   if (lowerMessage.includes("esg") || lowerMessage.includes("scope") || lowerMessage.includes("carbon") || 
       lowerMessage.includes("investment") || lowerMessage.includes("portfolio") || lowerMessage.includes("analysis") ||
       lowerMessage.includes("excel") || lowerMessage.includes("spreadsheet") || lowerMessage.includes("upload")) {
-    return `**OMNIS is reasoning….**
+    return `**Kyndryl Agentic Framework is reasoning….**
 
 Please help me calculate my (Scope 3 Category 15) financed emissions for the new set of investments I am considering. The portfolio consists of bonds, infrastructure (project finance) and real estate equity which I have uploaded via the Excel spreadsheet. I need to calculate these financed emissions in line with PCAF standard as well as our L&G internal guidance. Finally, I need to understand how these 'green' investments are compared to internal and external benchmarks.
 
@@ -118,9 +118,9 @@ Existing L&G Portfolio will be taken from L&G 2024 Sustainability Report unless 
 
 **Analysis Execution**
 
-**OMNIS is performing the analysis….**
+**Kyndryl Agentic Framework is performing the analysis….**
 
-**OMNIS has completed the analysis**`;
+**Kyndryl Agentic Framework has completed the analysis**`;
   }
   
   // Natural disaster prompts
@@ -130,7 +130,7 @@ Existing L&G Portfolio will be taken from L&G 2024 Sustainability Report unless 
   
   // Default responses - prioritize ESG analysis
   const defaultResponses = [
-    `**OMNIS is reasoning….**
+    `**Kyndryl Agentic Framework is reasoning….**
 
 Please help me calculate my (Scope 3 Category 15) financed emissions for the new set of investments I am considering. The portfolio consists of bonds, infrastructure (project finance) and real estate equity which I have uploaded via the Excel spreadsheet. I need to calculate these financed emissions in line with PCAF standard as well as our L&G internal guidance. Finally, I need to understand how these 'green' investments are compared to internal and external benchmarks.
 
@@ -139,7 +139,7 @@ I will read the Excel file you have uploaded and then dynamically create the req
 • Data acquisition agents will fetch internal and external data
 • Data validation, quality, imputation and review agents will validate and assess the data quality, fetch the (internal and external) datasets to address the identified data quality issues (e.g. anomalies, gaps etc), and use agentic worker agents to independently assure the work performance
 • Emission calculation agents will convert the activity data into financed emissions per the PCAF method
-• Evidence collation and report production agents will produce the final output
+��� Evidence collation and report production agents will produce the final output
 
 The full workflow breakdown can be inspected in the Directed Acyclic Graph (DAG) tab
 
@@ -151,9 +151,9 @@ Existing L&G Portfolio will be taken from L&G 2024 Sustainability Report unless 
 
 **Analysis Execution**
 
-**OMNIS is performing the analysis….**
+**Kyndryl Agentic Framework is performing the analysis….**
 
-**OMNIS has completed the analysis**`,
+**Kyndryl Agentic Framework has completed the analysis**`,
     "Thank you for your message. I'm a demo assistant helping you explore the Omnis platform capabilities.",
     "Based on your query, I can provide relevant data analysis and actionable insights. The platform integrates multiple data sources for comprehensive reporting.",
     "Your message has been processed. The Omnis platform offers advanced analytics and visualization capabilities for decision-making support.",
