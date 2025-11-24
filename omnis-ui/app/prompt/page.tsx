@@ -66,33 +66,86 @@ const templateFeatures = [
 function PromptSidebarContent({ children, onNewPrompt }: PromptSidebarContentProps) {
   const router = useRouter();
   const { state, toggleSidebar } = useSidebar();
+  const [customLogo, setCustomLogo] = useState<string | null>(null);
+  const logoInputRef = useRef<HTMLInputElement>(null);
 
   const handleSidebarClick = (e: React.MouseEvent) => {
     // Only expand if collapsed and not clicking on interactive elements
     if (state === "collapsed") {
       const target = e.target as HTMLElement;
       // Don't expand if clicking on buttons or links
-      if (!target.closest('button') && !target.closest('a')) {
+      if (!target.closest('button') && !target.closest('a') && !target.closest('.logo-upload-area')) {
         toggleSidebar();
       }
     }
   };
 
+  const handleLogoDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setCustomLogo(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleLogoDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleLogoClick = () => {
+    logoInputRef.current?.click();
+  };
+
+  const handleLogoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setCustomLogo(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <>
-      <Sidebar 
-        variant="sidebar" 
-        collapsible="icon" 
+      <Sidebar
+        variant="sidebar"
+        collapsible="icon"
         className="page-sidebar border-r"
         onClick={handleSidebarClick}
       >
         <SidebarHeader className="page-sidebar__header flex items-center justify-center border-b bg-white">
           {/* Kyndryl + L&G Concatenated Logos */}
-          <div className="page-sidebar__logo-wrapper flex items-center justify-center py-2">
+          <div
+            className="page-sidebar__logo-wrapper flex items-center justify-center py-2 logo-upload-area cursor-pointer relative group"
+            onDrop={handleLogoDrop}
+            onDragOver={handleLogoDragOver}
+            onClick={handleLogoClick}
+            title="Click or drag image to upload custom logo"
+          >
+            <input
+              type="file"
+              ref={logoInputRef}
+              className="hidden"
+              accept="image/*"
+              onChange={handleLogoSelect}
+            />
+            <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-md pointer-events-none">
+              <span className="text-xs text-gray-600 font-medium bg-white/80 px-2 py-1 rounded">Change Logo</span>
+            </div>
             <ConcatenatedLogo
               width={state === "expanded" ? 200 : 60}
               height={state === "expanded" ? undefined : 20}
               className="page-sidebar__concatenated-logo transition-all duration-300"
+              customSrc={customLogo || undefined}
             />
           </div>
         </SidebarHeader>
