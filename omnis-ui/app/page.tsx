@@ -23,7 +23,7 @@ export default function LoginPage() {
     <div className="flex h-screen items-center justify-center bg-[#0a1622]">
       <div className="flex flex-col items-center gap-4">
         <div className="w-12 h-12 border-4 border-cyan-400/30 border-t-cyan-400 rounded-full animate-spin"></div>
-        <p className="text-cyan-400 text-sm">Loading Omnis...</p>
+        <p className="text-cyan-400 text-sm">Loading Kyndryl Agentic Framework...</p>
       </div>
     </div>
   );
