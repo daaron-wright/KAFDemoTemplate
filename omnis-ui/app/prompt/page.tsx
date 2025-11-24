@@ -28,6 +28,7 @@ import "./prompt-page.css";
 
 interface PromptSidebarContentProps {
   children: React.ReactNode;
+  onNewPrompt?: () => void;
 }
 
 const templateFeatures = [
@@ -54,7 +55,8 @@ const templateFeatures = [
   }
 ];
 
-function PromptSidebarContent({ children }: PromptSidebarContentProps) {
+function PromptSidebarContent({ children, onNewPrompt }: PromptSidebarContentProps) {
+  const router = useRouter();
   const { state, toggleSidebar } = useSidebar();
 
   const handleSidebarClick = (e: React.MouseEvent) => {
@@ -105,9 +107,8 @@ function PromptSidebarContent({ children }: PromptSidebarContentProps) {
                     <button
                       onClick={(e) => {
                         e.preventDefault();
-                        // Reset the prompt form state
-                        setInputValue("");
-                        setUploadedFiles([]);
+                        // Reset the prompt form state via callback
+                        if (onNewPrompt) onNewPrompt();
                         // Navigate to prompt page to ensure a clean state
                         router.push("/prompt");
                       }}
@@ -157,10 +158,10 @@ function PromptSidebarContent({ children }: PromptSidebarContentProps) {
   );
 }
 
-function PromptSidebar({ children }: PromptSidebarContentProps) {
+function PromptSidebar({ children, onNewPrompt }: PromptSidebarContentProps) {
   return (
     <SidebarProvider defaultOpen={true}>
-      <PromptSidebarContent>{children}</PromptSidebarContent>
+      <PromptSidebarContent onNewPrompt={onNewPrompt}>{children}</PromptSidebarContent>
     </SidebarProvider>
   );
 }
@@ -270,10 +271,15 @@ export default function InitialPromptPage() {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
+  const handleNewPrompt = () => {
+    setInputValue("");
+    setUploadedFiles([]);
+  };
+
   return (
     <ProtectedRoute>
       <div className="h-screen overflow-hidden">
-        <PromptSidebar>
+        <PromptSidebar onNewPrompt={handleNewPrompt}>
           <div className="prompt-page-wrapper">
             <section className="prompt-shell" aria-label="Prompt Studio">
               <div className="prompt-hero">
