@@ -182,6 +182,26 @@ export default function InitialPromptPage() {
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [isDragOver, setIsDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isAgentsDialogOpen, setIsAgentsDialogOpen] = useState(false);
+  const [agents, setAgents] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchAgents = async () => {
+      try {
+        const agentList = await mockLettaClient.agents.list();
+        setAgents(agentList);
+      } catch (error) {
+        console.error("Failed to fetch agents:", error);
+      }
+    };
+    fetchAgents();
+  }, []);
+
+  const handleFeatureClick = (featureId: string) => {
+    if (featureId === "agents") {
+      setIsAgentsDialogOpen(true);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
