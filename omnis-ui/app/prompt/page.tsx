@@ -378,10 +378,41 @@ export default function InitialPromptPage() {
             <section className="prompt-shell" aria-label="Prompt Studio">
               <div className="prompt-hero">
                 <span className="prompt-eyebrow">Kyndryl Agentic Framework Template</span>
-                <h1 className="prompt-title">What would you like to build?</h1>
+                <h1 className="prompt-title">Build Your Agentic Demo</h1>
                 <p className="prompt-subtitle">
-                  This is a boilerplate template for building agentic workflows. Use this as a starting point to create your own demos.
+                  Follow the steps below to configure your agents, define their workflow, and launch your custom demo.
                 </p>
+              </div>
+
+              <div className="mb-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {[
+                  {
+                    step: 1,
+                    title: "Define Your Agents",
+                    description: "Edit `lib/mock-letta-client.ts` to define the agents that will participate in your workflow."
+                  },
+                  {
+                    step: 2,
+                    title: "Design the Workflow",
+                    description: "Use the prompt below to describe how these agents should collaborate."
+                  },
+                  {
+                    step: 3,
+                    title: "Provide Context",
+                    description: "Upload documents to give your agents the specific knowledge they need."
+                  },
+                  {
+                    step: 4,
+                    title: "Customize UI",
+                    description: "Modify `app/chat/page.tsx` to create custom visualizations."
+                  }
+                ].map((item) => (
+                  <div key={item.step} className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                    <div className="text-xs font-bold text-amber-600 uppercase tracking-wider mb-1">Step {item.step}</div>
+                    <h3 className="font-semibold text-gray-900 mb-1">{item.title}</h3>
+                    <p className="text-xs text-gray-600">{item.description}</p>
+                  </div>
+                ))}
               </div>
 
               <form onSubmit={handleSubmit} className="prompt-form">
