@@ -53,6 +53,11 @@ const config: Config = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      boxShadow: {
+        'level-1': 'var(--kd-elevation-level-1)',
+        'level-2': 'var(--kd-elevation-level-2)',
+        'level-3': 'var(--kd-elevation-level-3)',
+      },
       typography: {
         DEFAULT: {
           css: {
