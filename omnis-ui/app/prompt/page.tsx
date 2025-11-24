@@ -102,10 +102,23 @@ function PromptSidebarContent({ children }: PromptSidebarContentProps) {
                 
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild size="lg" className={`h-12 ${state === "collapsed" ? "justify-center px-0" : ""}`}>
-                    <Link href="/prompt">
+                    <button
+                      onClick={() => {
+                        // Reset the prompt form state
+                        setInputValue("");
+                        setUploadedFiles([]);
+                        // If we are not on the prompt page, navigate there
+                        // But since this component is used on the prompt page, we are likely already here
+                        // If this sidebar is shared, we might need navigation logic
+                        // For now, just resetting state is enough for "create new prompt"
+                        if (window.location.pathname !== "/prompt") {
+                          router.push("/prompt");
+                        }
+                      }}
+                    >
                       <Plus className="h-5 w-5" />
                       <span className={`font-medium ${state === "collapsed" ? "sr-only" : ""}`}>New Prompt</span>
-                    </Link>
+                    </button>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               </SidebarMenu>
