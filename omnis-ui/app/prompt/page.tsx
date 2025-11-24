@@ -5,12 +5,12 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Plus, Home, Upload, File, X, Code, Terminal, Workflow } from "lucide-react";
 import { useInitialPrompt } from "@/hooks/useInitialPrompt";
 import { Button } from "@/components/ui/button";
 import { ProtectedRoute } from "@/components/auth/protected-route";
 import { ConcatenatedLogo } from "@/components/ui/concatenated-logo";
 import { mockLettaClient } from "@/lib/mock-letta-client";
+import { ShidokaIcon } from "@/components/ui/shidoka-icon";
 import {
   Dialog,
   DialogContent,
@@ -43,21 +43,21 @@ const templateFeatures = [
   {
     id: "agents",
     label: "Available Agents",
-    icon: <Terminal className="h-5 w-5 text-amber-600" />,
+    icon: <ShidokaIcon name="console" className="h-5 w-5 text-amber-600" />,
     description: "Review `lib/mock-letta-client.ts` to see defined agents.",
     action: "View Agents"
   },
   {
     id: "workflow",
     label: "Agentic Workflow",
-    icon: <Workflow className="h-5 w-5 text-blue-600" />,
+    icon: <ShidokaIcon name="flow-data" className="h-5 w-5 text-blue-600" />,
     description: "Understand how agents collaborate in `components/dag`.",
     action: "View Workflow"
   },
   {
     id: "code",
     label: "Build Your Demo",
-    icon: <Code className="h-5 w-5 text-green-600" />,
+    icon: <ShidokaIcon name="code" className="h-5 w-5 text-green-600" />,
     description: "Check `app/prompt/page.tsx` to customize this template.",
     action: "Review Code"
   }
@@ -157,7 +157,7 @@ function PromptSidebarContent({ children, onNewPrompt }: PromptSidebarContentPro
                 }}
               >
                 <span className={`text-xs font-medium ${state === "collapsed" ? "hidden" : ""}`}>Upload Logo</span>
-                {state === "collapsed" && <Upload className="h-4 w-4" />}
+                {state === "collapsed" && <ShidokaIcon name="cloud-upload" className="h-4 w-4" />}
               </div>
             )}
           </div>
@@ -170,12 +170,12 @@ function PromptSidebarContent({ children, onNewPrompt }: PromptSidebarContentPro
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild size="lg" className={`h-12 ${state === "collapsed" ? "justify-center px-0" : ""}`}>
                     <Link href="/dashboard">
-                      <Home className="h-5 w-5" />
+                      <ShidokaIcon name="home" className="h-5 w-5" />
                       <span className={`font-medium ${state === "collapsed" ? "sr-only" : ""}`}>Home</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
-                
+
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild size="lg" className={`h-12 ${state === "collapsed" ? "justify-center px-0" : ""}`}>
                     <button
@@ -187,7 +187,7 @@ function PromptSidebarContent({ children, onNewPrompt }: PromptSidebarContentPro
                         router.push("/prompt");
                       }}
                     >
-                      <Plus className="h-5 w-5" />
+                      <ShidokaIcon name="add" className="h-5 w-5" />
                       <span className={`font-medium ${state === "collapsed" ? "sr-only" : ""}`}>New Prompt</span>
                     </button>
                   </SidebarMenuButton>
@@ -451,22 +451,7 @@ export default function InitialPromptPage() {
                         aria-label="Use microphone"
                         disabled={isSubmitting}
                       >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="20"
-                          height="20"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
-                          <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-                          <line x1="12" x2="12" y1="19" y2="22" />
-                          <line x1="8" x2="16" y1="22" y2="22" />
-                        </svg>
+                        <ShidokaIcon name="chat" className="h-5 w-5" />
                       </button>
 
                       <button
@@ -478,20 +463,7 @@ export default function InitialPromptPage() {
                         {isSubmitting ? (
                           <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                         ) : (
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="18"
-                            height="18"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          >
-                            <path d="m22 2-7 20-4-9-9-4Z" />
-                            <path d="M22 2 11 13" />
-                          </svg>
+                          <ShidokaIcon name="send" className="h-[18px] w-[18px]" />
                         )}
                       </button>
                     </div>
@@ -506,7 +478,7 @@ export default function InitialPromptPage() {
                 onDragLeave={handleDragLeave}
               >
                 <div className="prompt-dropzone__icon">
-                  <Upload className="h-5 w-5" />
+                  <ShidokaIcon name="cloud-upload" className="h-5 w-5" />
                 </div>
                 <div>
                   <p className="prompt-label">Attach supporting evidence</p>
@@ -538,7 +510,7 @@ export default function InitialPromptPage() {
                   {uploadedFiles.map((file, index) => (
                     <li key={`${file.name}-${index}`} className="prompt-file">
                       <div className="prompt-file__meta">
-                        <File className="h-5 w-5" />
+                        <ShidokaIcon name="document" className="h-5 w-5" />
                         <div>
                           <span>{file.name}</span>
                           <small>{formatFileSize(file.size)}</small>
@@ -550,7 +522,7 @@ export default function InitialPromptPage() {
                         className="kd-icon-button"
                         aria-label={`Remove ${file.name}`}
                       >
-                        <X className="h-4 w-4" />
+                        <ShidokaIcon name="close" className="h-4 w-4" />
                       </button>
                     </li>
                   ))}
