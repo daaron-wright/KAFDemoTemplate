@@ -1,6 +1,5 @@
 .prompt-sidebar-inset {
-  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(244, 244, 245, 0.9)),
-    url("/images/home_main_bg.png");
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(244, 244, 245, 0.9));
   background-position: center bottom;
   background-repeat: no-repeat;
   background-size: cover;
