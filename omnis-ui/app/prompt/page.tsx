@@ -5,8 +5,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Plus, Home, Settings, LogOut, Upload, File, X, Code, Terminal, Workflow } from "lucide-react";
-import { useAuth } from "@/lib/auth-provider";
+import { Plus, Home, Upload, File, X, Code, Terminal, Workflow } from "lucide-react";
 import { useInitialPrompt } from "@/hooks/useInitialPrompt";
 import { Button } from "@/components/ui/button";
 import { ProtectedRoute } from "@/components/auth/protected-route";
@@ -56,19 +55,6 @@ const templateFeatures = [
 ];
 
 function PromptSidebarContent({ children }: PromptSidebarContentProps) {
-  const [isUserModalOpen, setIsUserModalOpen] = useState(false);
-  const { user, signOut } = useAuth();
-
-  const handleLogout = async () => {
-    try {
-      console.log("Logging out user");
-      await signOut();
-      setIsUserModalOpen(false);
-    } catch (error) {
-      console.error("Error during logout:", error);
-    }
-  };
-
   const { state, toggleSidebar } = useSidebar();
 
   const handleSidebarClick = (e: React.MouseEvent) => {
@@ -151,29 +137,6 @@ function PromptSidebarContent({ children }: PromptSidebarContentProps) {
                 </button>
               </SidebarMenuButton>
             </SidebarMenuItem>
-
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild size="lg" className={`h-12 ${state === "collapsed" ? "justify-center px-0" : ""}`}>
-                <Link href="/settings">
-                  <Settings className="h-5 w-5" />
-                  <span className={`font-medium ${state === "collapsed" ? "sr-only" : ""}`}>Settings</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild size="lg" className={`h-12 ${state === "collapsed" ? "justify-center px-0" : ""}`}>
-                <button
-                  onClick={() => {
-                    console.log("User logout button clicked, opening modal");
-                    setIsUserModalOpen(true);
-                  }}
-                >
-                  <LogOut className="h-5 w-5" />
-                  <span className={`font-medium ${state === "collapsed" ? "sr-only" : ""}`}>Account</span>
-                </button>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
           </SidebarMenu>
         </SidebarFooter>
       </Sidebar>
@@ -181,98 +144,6 @@ function PromptSidebarContent({ children }: PromptSidebarContentProps) {
       <SidebarInset className="page__sidebar-main prompt-sidebar-inset">
         {children}
       </SidebarInset>
-
-      {/* User Account Modal */}
-      {isUserModalOpen && (
-        <div className="fixed inset-0 z-[99999] flex items-center justify-center">
-          {/* Backdrop */}
-          <div
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-            onClick={() => setIsUserModalOpen(false)}
-          />
-
-          {/* Modal Content */}
-          <div className="relative bg-white rounded-lg shadow-2xl p-6 w-96 max-w-[90vw] mx-4">
-            {/* Close button */}
-            <button
-              onClick={() => setIsUserModalOpen(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
-            >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-
-            {/* Header */}
-            <div className="text-center mb-6">
-              <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="32"
-                  height="32"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-amber-700"
-                >
-                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-                  <circle cx="12" cy="7" r="4" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900">Account</h3>
-              <p className="text-sm text-gray-600 mt-1">
-                {user?.email || "User"}
-              </p>
-              <p className="text-xs text-gray-500 mt-1">Signed in</p>
-            </div>
-
-            {/* Actions */}
-            <div className="space-y-3">
-              <button
-                onClick={handleLogout}
-                className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                  <polyline points="16,17 21,12 16,7" />
-                  <line x1="21" x2="9" y1="12" y2="12" />
-                </svg>
-                Sign out
-              </button>
-
-              <button
-                onClick={() => setIsUserModalOpen(false)}
-                className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-4 rounded-lg transition-colors"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 }
@@ -288,21 +159,11 @@ function PromptSidebar({ children }: PromptSidebarContentProps) {
 export default function InitialPromptPage() {
   const router = useRouter();
   const { setInitialPrompt } = useInitialPrompt();
-  const { user, session } = useAuth();
   const [inputValue, setInputValue] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [isDragOver, setIsDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // Simple debugging for auth status in prompt page
-  useEffect(() => {
-    console.log("Prompt page - Auth state:", {
-      hasUser: !!user,
-      userEmail: user?.email,
-      hasSession: !!session,
-    });
-  }, [user, session]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
