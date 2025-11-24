@@ -55,8 +55,9 @@
   --kd-color-button-primary-text: #ffffff;
   --kd-color-button-ghost-hover: rgba(47, 128, 140, 0.08);
 
-  --kd-color-interactive-115: #15191d;
   --kd-color-interactive-110: #1d2125;
+  --kd-color-interactive-115: #15191d;
+  --kd-color-interactive-120: #0e1114;
   --kd-color-interactive-105: #2c3236;
   --kd-color-interactive-100: #333a3f;
   --kd-color-interactive-90: #4f555b;
