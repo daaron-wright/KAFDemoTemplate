@@ -5,7 +5,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Plus, Home, Settings, LogOut, Upload, File, X } from "lucide-react";
+import { Plus, Home, Settings, LogOut, Upload, File, X, Code, Terminal, Workflow } from "lucide-react";
 import { useAuth } from "@/lib/auth-provider";
 import { useInitialPrompt } from "@/hooks/useInitialPrompt";
 import { Button } from "@/components/ui/button";
@@ -31,23 +31,28 @@ interface PromptSidebarContentProps {
   children: React.ReactNode;
 }
 
-const curatedPrompts = [
+const templateFeatures = [
   {
-    id: "msat",
-    label: "MSAT Investigate production deviation",
-    prompt:
-      "How can I use our document-intelligence workspace to analyze a production deviation? I need to monitor logs, auto-fetch batch metadata, run semantic search across deviation reports and SOPs, validate document versions, summarize historical corrective actions, and draft a compliance-ready resolution. Please ensure the workflow uses agentic orchestration, natural language search, and version-controlled sources, and updates the knowledge graph for future queries.",
-    summary:
-      "Monitor logs, auto-fetch batch metadata, validate versions, summarize corrective actions, and push updates into the knowledge graph.",
+    id: "agents",
+    label: "Available Agents",
+    icon: <Terminal className="h-5 w-5 text-amber-600" />,
+    description: "Review `lib/mock-letta-client.ts` to see defined agents.",
+    action: "View Agents"
   },
   {
-    id: "rd",
-    label: "R&D Retrieve Experiment Results",
-    prompt:
-      "How can I use our document-intelligence workspace to gather experiment results for a new study? I need to run semantic search across protocols and experiment clusters, validate the latest versions, summarize findings, compare evidence across multiple sources, and generate a decision memo. Please ensure the workflow uses agentic orchestration, natural language search, version-controlled sources, and updates the knowledge graph for future insights.",
-    summary:
-      "Search protocols, confirm latest revisions, synthesize findings across sources, and generate a decision memo with knowledge graph updates.",
+    id: "workflow",
+    label: "Agentic Workflow",
+    icon: <Workflow className="h-5 w-5 text-blue-600" />,
+    description: "Understand how agents collaborate in `components/dag`.",
+    action: "View Workflow"
   },
+  {
+    id: "code",
+    label: "Build Your Demo",
+    icon: <Code className="h-5 w-5 text-green-600" />,
+    description: "Check `app/prompt/page.tsx` to customize this template.",
+    action: "Review Code"
+  }
 ];
 
 function PromptSidebarContent({ children }: PromptSidebarContentProps) {
@@ -402,17 +407,17 @@ export default function InitialPromptPage() {
           <div className="prompt-page-wrapper">
             <section className="prompt-shell" aria-label="Prompt Studio">
               <div className="prompt-hero">
-                <span className="prompt-eyebrow">Prompt studio</span>
-                <h1 className="prompt-title">What would you like to know?</h1>
+                <span className="prompt-eyebrow">Kyndryl Agentic Framework Template</span>
+                <h1 className="prompt-title">What would you like to build?</h1>
                 <p className="prompt-subtitle">
-                  Use the Shidoka design system foundation to compose governed questions, attach provenance, and route them into the orchestration workspace.
+                  This is a boilerplate template for building agentic workflows. Use this as a starting point to create your own demos.
                 </p>
               </div>
 
               <form onSubmit={handleSubmit} className="prompt-form">
                 <div className="prompt-form__group">
                   <label htmlFor="prompt-textarea" className="prompt-label">
-                    Compose a question
+                    Input your prompt
                   </label>
                   <div className={`prompt-textarea-wrapper ${isSubmitting ? "is-disabled" : ""}`}>
                     <textarea
@@ -425,7 +430,7 @@ export default function InitialPromptPage() {
                           handleSubmit(e);
                         }
                       }}
-                      placeholder="Ask me anything"
+                      placeholder="Describe the task you want your agents to perform..."
                       className="prompt-textarea"
                       aria-label="Enter your question"
                       disabled={isSubmitting}
@@ -551,25 +556,28 @@ export default function InitialPromptPage() {
                 </ul>
               )}
 
-              <section className="prompt-samples" aria-label="Curated starter prompts">
+              <section className="prompt-samples" aria-label="Template Features">
                 <div className="prompt-samples__header">
-                  <span className="prompt-eyebrow">Guided starters</span>
+                  <span className="prompt-eyebrow">Template Features</span>
                   <p className="prompt-helper">
-                    Each card reflects an agentic workflow grounded in Shidoka spacing, elevation, and color tokens.
+                    Explore the components available in this boilerplate to build your own agentic workflows.
                   </p>
                 </div>
                 <div className="prompt-card-grid">
-                  {curatedPrompts.map((sample) => (
-                    <button
-                      key={sample.id}
-                      type="button"
-                      className="prompt-card"
-                      onClick={() => setInputValue(sample.prompt)}
-                      disabled={isSubmitting}
+                  {templateFeatures.map((feature) => (
+                    <div
+                      key={feature.id}
+                      className="prompt-card cursor-default"
                     >
-                      <span className="prompt-card__eyebrow">{sample.label}</span>
-                      <p>{sample.summary}</p>
-                    </button>
+                      <div className="flex items-center gap-2 mb-2">
+                        {feature.icon}
+                        <span className="prompt-card__eyebrow mb-0">{feature.label}</span>
+                      </div>
+                      <p className="mb-4">{feature.description}</p>
+                      <div className="text-xs font-semibold text-amber-700 uppercase tracking-wider">
+                        {feature.action}
+                      </div>
+                    </div>
                   ))}
                 </div>
               </section>
