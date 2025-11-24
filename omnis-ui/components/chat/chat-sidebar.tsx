@@ -1,8 +1,8 @@
 "use client";
 
-import { Home, Plus, Expand } from "lucide-react";
+import { Home, Plus, Expand, Upload } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import {
