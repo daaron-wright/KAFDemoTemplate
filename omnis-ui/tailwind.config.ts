@@ -12,6 +12,15 @@ const config: Config = {
       fontFamily: {
         "noto-naskh-arabic": ["var(--font-noto-naskh-arabic)"],
         "noto-kufi": ["var(--font-noto-kufi-arabic)"],
+        primary: ["var(--kd-font-family-primary)"],
+        secondary: ["var(--kd-font-family-secondary)"],
+        code: ["var(--kd-font-family-code-view)"],
+      },
+      fontSize: {
+        'hero-1': ['var(--kd-font-size-hero-1-sm)', { lineHeight: 'var(--kd-line-height-hero-1-sm)' }],
+        'headline-1': ['var(--kd-font-size-headline-1-sm)', { lineHeight: 'var(--kd-line-height-headline-1-sm)' }],
+        'body-1': ['var(--kd-font-size-body-1-sm)', { lineHeight: 'var(--kd-line-height-body-1-sm)' }],
+        'body-2': ['var(--kd-font-size-body-2-sm)', { lineHeight: 'var(--kd-line-height-body-2-sm)' }],
       },
       colors: {
         border: "var(--border)",
