@@ -10,6 +10,14 @@ import { useInitialPrompt } from "@/hooks/useInitialPrompt";
 import { Button } from "@/components/ui/button";
 import { ProtectedRoute } from "@/components/auth/protected-route";
 import { ConcatenatedLogo } from "@/components/ui/concatenated-logo";
+import { mockLettaClient } from "@/lib/mock-letta-client";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Sidebar,
   SidebarContent,
