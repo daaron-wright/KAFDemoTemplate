@@ -265,11 +265,6 @@
 }
 
 @media (max-width: 768px) {
-  .prompt-shell {
-    padding: var(--kd-spacing-32);
-    border-radius: var(--kd-radius-lg);
-  }
-
   .prompt-dropzone {
     grid-template-columns: 1fr;
     text-align: left;
