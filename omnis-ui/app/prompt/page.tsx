@@ -5,12 +5,12 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Plus, Home, Upload, File, X, Code, Terminal, Workflow } from "lucide-react";
 import { useInitialPrompt } from "@/hooks/useInitialPrompt";
 import { Button } from "@/components/ui/button";
 import { ProtectedRoute } from "@/components/auth/protected-route";
 import { ConcatenatedLogo } from "@/components/ui/concatenated-logo";
 import { mockLettaClient } from "@/lib/mock-letta-client";
+import { ShidokaIcon } from "@/components/ui/shidoka-icon";
 import {
   Dialog,
   DialogContent,
@@ -43,21 +43,21 @@ const templateFeatures = [
   {
     id: "agents",
     label: "Available Agents",
-    icon: <Terminal className="h-5 w-5 text-amber-600" />,
+    icon: <ShidokaIcon name="console" className="h-5 w-5 text-amber-600" />,
     description: "Review `lib/mock-letta-client.ts` to see defined agents.",
     action: "View Agents"
   },
   {
     id: "workflow",
     label: "Agentic Workflow",
-    icon: <Workflow className="h-5 w-5 text-blue-600" />,
+    icon: <ShidokaIcon name="flow-data" className="h-5 w-5 text-blue-600" />,
     description: "Understand how agents collaborate in `components/dag`.",
     action: "View Workflow"
   },
   {
     id: "code",
     label: "Build Your Demo",
-    icon: <Code className="h-5 w-5 text-green-600" />,
+    icon: <ShidokaIcon name="code" className="h-5 w-5 text-green-600" />,
     description: "Check `app/prompt/page.tsx` to customize this template.",
     action: "Review Code"
   }
@@ -68,6 +68,26 @@ function PromptSidebarContent({ children, onNewPrompt }: PromptSidebarContentPro
   const { state, toggleSidebar } = useSidebar();
   const [customLogo, setCustomLogo] = useState<string | null>(null);
   const logoInputRef = useRef<HTMLInputElement>(null);
+  const [isAgentsDialogOpen, setIsAgentsDialogOpen] = useState(false);
+  const [agents, setAgents] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchAgents = async () => {
+      try {
+        const agentList = await mockLettaClient.agents.list();
+        setAgents(agentList);
+      } catch (error) {
+        console.error("Failed to fetch agents:", error);
+      }
+    };
+    fetchAgents();
+  }, []);
+
+  const handleFeatureClick = (featureId: string) => {
+    if (featureId === "agents") {
+      setIsAgentsDialogOpen(true);
+    }
+  };
 
   const handleSidebarClick = (e: React.MouseEvent) => {
     // Only expand if collapsed and not clicking on interactive elements
@@ -157,7 +177,7 @@ function PromptSidebarContent({ children, onNewPrompt }: PromptSidebarContentPro
                 }}
               >
                 <span className={`text-xs font-medium ${state === "collapsed" ? "hidden" : ""}`}>Upload Logo</span>
-                {state === "collapsed" && <Upload className="h-4 w-4" />}
+                {state === "collapsed" && <ShidokaIcon name="cloud-upload" className="h-4 w-4" />}
               </div>
             )}
           </div>
@@ -170,12 +190,12 @@ function PromptSidebarContent({ children, onNewPrompt }: PromptSidebarContentPro
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild size="lg" className={`h-12 ${state === "collapsed" ? "justify-center px-0" : ""}`}>
                     <Link href="/dashboard">
-                      <Home className="h-5 w-5" />
+                      <ShidokaIcon name="home" className="h-5 w-5" />
                       <span className={`font-medium ${state === "collapsed" ? "sr-only" : ""}`}>Home</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
-                
+
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild size="lg" className={`h-12 ${state === "collapsed" ? "justify-center px-0" : ""}`}>
                     <button
@@ -187,11 +207,41 @@ function PromptSidebarContent({ children, onNewPrompt }: PromptSidebarContentPro
                         router.push("/prompt");
                       }}
                     >
-                      <Plus className="h-5 w-5" />
+                      <ShidokaIcon name="add" className="h-5 w-5" />
                       <span className={`font-medium ${state === "collapsed" ? "sr-only" : ""}`}>New Prompt</span>
                     </button>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+
+          <SidebarGroup className="mt-4">
+            <div className={`px-4 mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wider ${state === "collapsed" ? "hidden" : ""}`}>
+              Template Features
+            </div>
+            <SidebarGroupContent>
+              <SidebarMenu className="gap-1">
+                {templateFeatures.map((feature) => (
+                  <SidebarMenuItem key={feature.id}>
+                    <SidebarMenuButton
+                      asChild
+                      size="lg"
+                      className={`h-auto py-3 ${state === "collapsed" ? "justify-center px-0" : ""}`}
+                      onClick={() => handleFeatureClick(feature.id)}
+                    >
+                      <button className="flex flex-col items-start gap-1 w-full">
+                        <div className="flex items-center gap-3 w-full">
+                          {feature.icon}
+                          <span className={`font-medium ${state === "collapsed" ? "sr-only" : ""}`}>{feature.label}</span>
+                        </div>
+                        <span className={`text-xs text-gray-500 line-clamp-2 text-left pl-8 ${state === "collapsed" ? "hidden" : ""}`}>
+                          {feature.description}
+                        </span>
+                      </button>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
@@ -202,21 +252,7 @@ function PromptSidebarContent({ children, onNewPrompt }: PromptSidebarContentPro
             <SidebarMenuItem>
               <SidebarMenuButton asChild size="lg" className={`h-12 ${state === "collapsed" ? "justify-center px-0" : ""}`}>
                 <button onClick={toggleSidebar}>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="h-5 w-5"
-                  >
-                    <path d="M11 19l-7-7 7-7" />
-                    <path d="M21 19l-7-7 7-7" />
-                  </svg>
+                  <ShidokaIcon name="chevron-left" className="h-5 w-5" />
                   <span className={`font-medium ${state === "collapsed" ? "sr-only" : ""}`}>Collapse</span>
                 </button>
               </SidebarMenuButton>
@@ -227,12 +263,52 @@ function PromptSidebarContent({ children, onNewPrompt }: PromptSidebarContentPro
       
       <SidebarInset className="page__sidebar-main prompt-sidebar-inset">
         {children}
+
+        <Dialog open={isAgentsDialogOpen} onOpenChange={setIsAgentsDialogOpen}>
+          <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Available Agents</DialogTitle>
+              <DialogDescription>
+                These are the agents currently available in the Kyndryl Agentic Framework.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+              {agents.map((agent) => (
+                <div key={agent.id} className="p-4 border rounded-lg bg-card text-card-foreground shadow-sm hover:shadow-md transition-shadow">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="font-semibold text-lg text-amber-900">{agent.name}</h3>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-3">{agent.description}</p>
+                  {agent.capabilities && (
+                    <div className="flex flex-wrap gap-1.5">
+                      {agent.capabilities.map((cap: string) => (
+                        <span key={cap} className="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-medium">
+                          {cap}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </DialogContent>
+        </Dialog>
       </SidebarInset>
     </>
   );
 }
 
 function PromptSidebar({ children, onNewPrompt }: PromptSidebarContentProps) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
+
   return (
     <SidebarProvider defaultOpen={true}>
       <PromptSidebarContent onNewPrompt={onNewPrompt}>{children}</PromptSidebarContent>
@@ -248,26 +324,6 @@ export default function InitialPromptPage() {
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [isDragOver, setIsDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [isAgentsDialogOpen, setIsAgentsDialogOpen] = useState(false);
-  const [agents, setAgents] = useState<any[]>([]);
-
-  useEffect(() => {
-    const fetchAgents = async () => {
-      try {
-        const agentList = await mockLettaClient.agents.list();
-        setAgents(agentList);
-      } catch (error) {
-        console.error("Failed to fetch agents:", error);
-      }
-    };
-    fetchAgents();
-  }, []);
-
-  const handleFeatureClick = (featureId: string) => {
-    if (featureId === "agents") {
-      setIsAgentsDialogOpen(true);
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -451,22 +507,7 @@ export default function InitialPromptPage() {
                         aria-label="Use microphone"
                         disabled={isSubmitting}
                       >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="20"
-                          height="20"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
-                          <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-                          <line x1="12" x2="12" y1="19" y2="22" />
-                          <line x1="8" x2="16" y1="22" y2="22" />
-                        </svg>
+                        <ShidokaIcon name="chat" className="h-5 w-5" />
                       </button>
 
                       <button
@@ -478,20 +519,7 @@ export default function InitialPromptPage() {
                         {isSubmitting ? (
                           <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                         ) : (
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="18"
-                            height="18"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          >
-                            <path d="m22 2-7 20-4-9-9-4Z" />
-                            <path d="M22 2 11 13" />
-                          </svg>
+                          <ShidokaIcon name="send" className="h-[18px] w-[18px]" />
                         )}
                       </button>
                     </div>
@@ -506,7 +534,7 @@ export default function InitialPromptPage() {
                 onDragLeave={handleDragLeave}
               >
                 <div className="prompt-dropzone__icon">
-                  <Upload className="h-5 w-5" />
+                  <ShidokaIcon name="cloud-upload" className="h-5 w-5" />
                 </div>
                 <div>
                   <p className="prompt-label">Attach supporting evidence</p>
@@ -538,7 +566,7 @@ export default function InitialPromptPage() {
                   {uploadedFiles.map((file, index) => (
                     <li key={`${file.name}-${index}`} className="prompt-file">
                       <div className="prompt-file__meta">
-                        <File className="h-5 w-5" />
+                        <ShidokaIcon name="document" className="h-5 w-5" />
                         <div>
                           <span>{file.name}</span>
                           <small>{formatFileSize(file.size)}</small>
@@ -550,72 +578,15 @@ export default function InitialPromptPage() {
                         className="kd-icon-button"
                         aria-label={`Remove ${file.name}`}
                       >
-                        <X className="h-4 w-4" />
+                        <ShidokaIcon name="close" className="h-4 w-4" />
                       </button>
                     </li>
                   ))}
                 </ul>
               )}
-
-              <section className="prompt-samples" aria-label="Template Features">
-                <div className="prompt-samples__header">
-                  <span className="prompt-eyebrow">Template Features</span>
-                  <p className="prompt-helper">
-                    Explore the components available in this boilerplate to build your own agentic workflows.
-                  </p>
-                </div>
-                <div className="prompt-card-grid">
-                  {templateFeatures.map((feature) => (
-                    <div
-                      key={feature.id}
-                      className={`prompt-card ${feature.id === 'agents' ? 'cursor-pointer hover:bg-gray-50 transition-colors' : 'cursor-default'}`}
-                      onClick={() => handleFeatureClick(feature.id)}
-                    >
-                      <div className="flex items-center gap-2 mb-2">
-                        {feature.icon}
-                        <span className="prompt-card__eyebrow mb-0">{feature.label}</span>
-                      </div>
-                      <p className="mb-4">{feature.description}</p>
-                      <div className="text-xs font-semibold text-amber-700 uppercase tracking-wider">
-                        {feature.action}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
             </section>
           </div>
         </PromptSidebar>
-
-        <Dialog open={isAgentsDialogOpen} onOpenChange={setIsAgentsDialogOpen}>
-          <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>Available Agents</DialogTitle>
-              <DialogDescription>
-                These are the agents currently available in the Kyndryl Agentic Framework.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-              {agents.map((agent) => (
-                <div key={agent.id} className="p-4 border rounded-lg bg-card text-card-foreground shadow-sm hover:shadow-md transition-shadow">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-semibold text-lg text-amber-900">{agent.name}</h3>
-                  </div>
-                  <p className="text-sm text-gray-600 mb-3">{agent.description}</p>
-                  {agent.capabilities && (
-                    <div className="flex flex-wrap gap-1.5">
-                      {agent.capabilities.map((cap: string) => (
-                        <span key={cap} className="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-medium">
-                          {cap}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </DialogContent>
-        </Dialog>
       </div>
     </ProtectedRoute>
   );
