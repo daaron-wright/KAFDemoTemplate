@@ -68,6 +68,26 @@ function PromptSidebarContent({ children, onNewPrompt }: PromptSidebarContentPro
   const { state, toggleSidebar } = useSidebar();
   const [customLogo, setCustomLogo] = useState<string | null>(null);
   const logoInputRef = useRef<HTMLInputElement>(null);
+  const [isAgentsDialogOpen, setIsAgentsDialogOpen] = useState(false);
+  const [agents, setAgents] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchAgents = async () => {
+      try {
+        const agentList = await mockLettaClient.agents.list();
+        setAgents(agentList);
+      } catch (error) {
+        console.error("Failed to fetch agents:", error);
+      }
+    };
+    fetchAgents();
+  }, []);
+
+  const handleFeatureClick = (featureId: string) => {
+    if (featureId === "agents") {
+      setIsAgentsDialogOpen(true);
+    }
+  };
 
   const handleSidebarClick = (e: React.MouseEvent) => {
     // Only expand if collapsed and not clicking on interactive elements
@@ -195,6 +215,36 @@ function PromptSidebarContent({ children, onNewPrompt }: PromptSidebarContentPro
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
+
+          <SidebarGroup className="mt-4">
+            <div className={`px-4 mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wider ${state === "collapsed" ? "hidden" : ""}`}>
+              Template Features
+            </div>
+            <SidebarGroupContent>
+              <SidebarMenu className="gap-1">
+                {templateFeatures.map((feature) => (
+                  <SidebarMenuItem key={feature.id}>
+                    <SidebarMenuButton
+                      asChild
+                      size="lg"
+                      className={`h-auto py-3 ${state === "collapsed" ? "justify-center px-0" : ""}`}
+                      onClick={() => handleFeatureClick(feature.id)}
+                    >
+                      <button className="flex flex-col items-start gap-1 w-full">
+                        <div className="flex items-center gap-3 w-full">
+                          {feature.icon}
+                          <span className={`font-medium ${state === "collapsed" ? "sr-only" : ""}`}>{feature.label}</span>
+                        </div>
+                        <span className={`text-xs text-gray-500 line-clamp-2 text-left pl-8 ${state === "collapsed" ? "hidden" : ""}`}>
+                          {feature.description}
+                        </span>
+                      </button>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
         </SidebarContent>
 
         <SidebarFooter className="mt-auto border-t bg-gray-50/50">
@@ -213,6 +263,36 @@ function PromptSidebarContent({ children, onNewPrompt }: PromptSidebarContentPro
       
       <SidebarInset className="page__sidebar-main prompt-sidebar-inset">
         {children}
+
+        <Dialog open={isAgentsDialogOpen} onOpenChange={setIsAgentsDialogOpen}>
+          <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Available Agents</DialogTitle>
+              <DialogDescription>
+                These are the agents currently available in the Kyndryl Agentic Framework.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+              {agents.map((agent) => (
+                <div key={agent.id} className="p-4 border rounded-lg bg-card text-card-foreground shadow-sm hover:shadow-md transition-shadow">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="font-semibold text-lg text-amber-900">{agent.name}</h3>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-3">{agent.description}</p>
+                  {agent.capabilities && (
+                    <div className="flex flex-wrap gap-1.5">
+                      {agent.capabilities.map((cap: string) => (
+                        <span key={cap} className="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-medium">
+                          {cap}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </DialogContent>
+        </Dialog>
       </SidebarInset>
     </>
   );
@@ -234,26 +314,6 @@ export default function InitialPromptPage() {
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [isDragOver, setIsDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [isAgentsDialogOpen, setIsAgentsDialogOpen] = useState(false);
-  const [agents, setAgents] = useState<any[]>([]);
-
-  useEffect(() => {
-    const fetchAgents = async () => {
-      try {
-        const agentList = await mockLettaClient.agents.list();
-        setAgents(agentList);
-      } catch (error) {
-        console.error("Failed to fetch agents:", error);
-      }
-    };
-    fetchAgents();
-  }, []);
-
-  const handleFeatureClick = (featureId: string) => {
-    if (featureId === "agents") {
-      setIsAgentsDialogOpen(true);
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -514,66 +574,9 @@ export default function InitialPromptPage() {
                   ))}
                 </ul>
               )}
-
-              <section className="prompt-samples" aria-label="Template Features">
-                <div className="prompt-samples__header">
-                  <span className="prompt-eyebrow">Template Features</span>
-                  <p className="prompt-helper">
-                    Explore the components available in this boilerplate to build your own agentic workflows.
-                  </p>
-                </div>
-                <div className="prompt-card-grid">
-                  {templateFeatures.map((feature) => (
-                    <div
-                      key={feature.id}
-                      className={`prompt-card ${feature.id === 'agents' ? 'cursor-pointer hover:bg-gray-50 transition-colors' : 'cursor-default'}`}
-                      onClick={() => handleFeatureClick(feature.id)}
-                    >
-                      <div className="flex items-center gap-2 mb-2">
-                        {feature.icon}
-                        <span className="prompt-card__eyebrow mb-0">{feature.label}</span>
-                      </div>
-                      <p className="mb-4">{feature.description}</p>
-                      <div className="text-xs font-semibold text-amber-700 uppercase tracking-wider">
-                        {feature.action}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
             </section>
           </div>
         </PromptSidebar>
-
-        <Dialog open={isAgentsDialogOpen} onOpenChange={setIsAgentsDialogOpen}>
-          <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>Available Agents</DialogTitle>
-              <DialogDescription>
-                These are the agents currently available in the Kyndryl Agentic Framework.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-              {agents.map((agent) => (
-                <div key={agent.id} className="p-4 border rounded-lg bg-card text-card-foreground shadow-sm hover:shadow-md transition-shadow">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-semibold text-lg text-amber-900">{agent.name}</h3>
-                  </div>
-                  <p className="text-sm text-gray-600 mb-3">{agent.description}</p>
-                  {agent.capabilities && (
-                    <div className="flex flex-wrap gap-1.5">
-                      {agent.capabilities.map((cap: string) => (
-                        <span key={cap} className="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-medium">
-                          {cap}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </DialogContent>
-        </Dialog>
       </div>
     </ProtectedRoute>
   );
