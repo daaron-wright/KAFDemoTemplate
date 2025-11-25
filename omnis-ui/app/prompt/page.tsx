@@ -70,11 +70,6 @@ function PromptSidebarContent({ children, onNewPrompt }: PromptSidebarContentPro
   const logoInputRef = useRef<HTMLInputElement>(null);
   const [isAgentsDialogOpen, setIsAgentsDialogOpen] = useState(false);
   const [agents, setAgents] = useState<any[]>([]);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     const fetchAgents = async () => {
@@ -138,10 +133,6 @@ function PromptSidebarContent({ children, onNewPrompt }: PromptSidebarContentPro
       reader.readAsDataURL(file);
     }
   };
-
-  if (!mounted) {
-    return null;
-  }
 
   return (
     <>
@@ -308,6 +299,16 @@ function PromptSidebarContent({ children, onNewPrompt }: PromptSidebarContentPro
 }
 
 function PromptSidebar({ children, onNewPrompt }: PromptSidebarContentProps) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
+
   return (
     <SidebarProvider defaultOpen={true}>
       <PromptSidebarContent onNewPrompt={onNewPrompt}>{children}</PromptSidebarContent>
